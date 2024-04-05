@@ -9,9 +9,6 @@ RUN apk add --no-cache git \
     && go install -v github.com/HuntDownProject/hednsextractor/cmd/hednsextractor@latest \
     && go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
 
-# Add the following line to the Dockerfile to set the PATH environment variable
-ENV PATH=$PATH:/go/bin
-
 # Release
 FROM alpine:3.18.6
 
@@ -21,7 +18,9 @@ RUN apk -U upgrade --no-cache \
     && apk add --no-cache bind-tools chromium ca-certificates \
     && rm -rf /var/cache/apk/* \
     && update-ca-certificates \
-    && pdtm -install-all
+    && pdtm -install-all -bp $HOME/go/bin \
+    && echo "export PATH=$HOME/bin:$HOME/go/bin:$PATH" >> $HOME/.profile
+
 
 # Add the following line to the Dockerfile to set the WORKDIR
 WORKDIR /root
