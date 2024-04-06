@@ -25,6 +25,7 @@ RUN apk -U upgrade --no-cache \
     && rm -rf /var/cache/apk/* \
     && update-ca-certificates \
     && python -m ensurepip \
+    && pip install requests duckdb pandas \
     && pdtm -install-all -bp $HOME/go/bin
 
 # Definir o WORKDIR
