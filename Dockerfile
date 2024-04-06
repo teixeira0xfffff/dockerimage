@@ -14,18 +14,18 @@ FROM alpine:3.18.6
 
 COPY --from=build-env /go/bin /usr/local/bin/
 
+# Adicionar configurações de PATH ao /etc/profile
+RUN echo "export PATH=$HOME/bin:$HOME/go/bin:$PATH" >> /etc/profile
+
+# Carregar /etc/profile ao iniciar o shell
+RUN source /etc/profile
+
 RUN apk -U upgrade --no-cache \
     && apk add --no-cache bind-tools chromium ca-certificates python3 py3-pip \
     && rm -rf /var/cache/apk/* \
     && update-ca-certificates \
     && python -m ensurepip \
     && pdtm -install-all -bp $HOME/go/bin
-
-# Adicionar configurações de PATH ao /etc/profile
-RUN echo "export PATH=$HOME/bin:$HOME/go/bin:$PATH" >> /etc/profile
-
-# Carregar /etc/profile ao iniciar o shell
-RUN echo "source /etc/profile" >> /etc/profile
 
 # Definir o WORKDIR
 WORKDIR /root
