@@ -15,15 +15,20 @@ FROM alpine:3.18.6
 COPY --from=build-env /go/bin /usr/local/bin/
 
 RUN apk -U upgrade --no-cache \
-    && apk add --no-cache bind-tools chromium ca-certificates \
+    && apk add --no-cache bind-tools chromium ca-certificates python3 py3-pip \
     && rm -rf /var/cache/apk/* \
     && update-ca-certificates \
-    && pdtm -install-all -bp $HOME/go/bin \
-    && echo "export PATH=$HOME/bin:$HOME/go/bin:$PATH" >> $HOME/.profile
+    && python -m ensurepip \
+    && pdtm -install-all -bp $HOME/go/bin
 
+# Adicionar configurações de PATH ao /etc/profile
+RUN echo "export PATH=$HOME/bin:$HOME/go/bin:$PATH" >> /etc/profile
 
-# Add the following line to the Dockerfile to set the WORKDIR
+# Carregar /etc/profile ao iniciar o shell
+RUN echo "source /etc/profile" >> /etc/profile
+
+# Definir o WORKDIR
 WORKDIR /root
 
-# Add the following line to the Dockerfile to set the ENTRYPOINT
+# Definir o ENTRYPOINT
 ENTRYPOINT ["/bin/sh"]
