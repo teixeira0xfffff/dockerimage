@@ -21,14 +21,17 @@ RUN echo "export PATH=$HOME/bin:$HOME/go/bin:$PATH" >> /etc/profile
 RUN source /etc/profile
 
 RUN apk -U upgrade --no-cache \
-    && apk add --no-cache bind-tools chromium ca-certificates python3 py3-pip \
+    && apk add --no-cache curl bind-tools chromium ca-certificates python3 py3-pip\
     && rm -rf /var/cache/apk/* \
     && update-ca-certificates \
     && python -m ensurepip \
     && pip install requests duckdb pandas \
-    && pdtm -install-all -bp $HOME/go/bin
+    && pdtm -install-all -bp $HOME/go/bin \
+    && echo "export PATH=$HOME/bin:$HOME/go/bin:$PATH" >> $HOME/.profile \
+    && curl -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc \
+    && chmod +x /usr/local/bin/mc
 
-# Definir o WORKDIR
+# Add the following line to the Dockerfile to set the WORKDIR
 WORKDIR /root
 
 # Definir o ENTRYPOINT
