@@ -3,7 +3,6 @@ FROM golang:1.21-alpine AS build-env
 RUN apk add build-base
 
 # Remove the go install commands as they are not valid Dockerfile instructions
-
 RUN apk add --no-cache git \
     && go install -v github.com/tomnomnom/anew@latest \
     && go install -v github.com/HuntDownProject/hednsextractor/cmd/hednsextractor@latest \
@@ -34,5 +33,5 @@ RUN apk -U upgrade --no-cache \
 # Add the following line to the Dockerfile to set the WORKDIR
 WORKDIR /root
 
-# Definir o ENTRYPOINT
-ENTRYPOINT ["/bin/sh"]
+# Add the following line to the Dockerfile to set the ENTRYPOINT
+ENTRYPOINT ["/bin/sh", "-l"]
