@@ -21,7 +21,6 @@ RUN source /etc/profile
 
 RUN apk -U upgrade --no-cache \
     && apk add --no-cache git curl bind-tools chromium ca-certificates python3 py3-pip \
-    && rm -rf /var/cache/apk/* \
     && update-ca-certificates \
     && python -m ensurepip \
     && pip install requests duckdb pandas koodousfinder \
@@ -30,6 +29,8 @@ RUN apk -U upgrade --no-cache \
     && echo "export PATH=$HOME/bin:$HOME/go/bin:$PATH" >> $HOME/.profile \
     && curl -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc \
     && chmod +x /usr/local/bin/mc
+
+RUN  rm -rf /var/cache/apk/*
 
 # Add the following line to the Dockerfile to set the WORKDIR
 WORKDIR /root
