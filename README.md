@@ -12,9 +12,11 @@ docker pull ghcr.io/neriberto/bloodhound:latest
 ## Applications
 
 * `HEDnsExtractor` - [github.com/HuntDownProject/hednsextractor](https://github.com/HuntDownProject/hednsextractor)
+* `KoodousFinder` - [https://github.com/HuntDownProject/KoodousFinder](https://github.com/HuntDownProject/KoodousFinder)
 * `pdtm` - All tools from Project Discovery using the [github.com/projectdiscovery/pdtm](https://github.com/projectdiscovery/pdtm)
 * `anew` - [github.com/tomnomnom/anew](https://github.com/tomnomnom/anew)
-* mc - [Minio](https://min.io/) command line
+* `apkd` - [https://github.com/kiber-io/apkd](https://github.com/kiber-io/apkd)
+* `mc` - [Minio](https://min.io/) command line
 
 ## Usage Examples
 
