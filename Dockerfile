@@ -6,7 +6,8 @@ RUN apk add build-base
 RUN apk add --no-cache git \
     && go install -v github.com/tomnomnom/anew@latest \
     && go install -v github.com/HuntDownProject/hednsextractor/cmd/hednsextractor@latest \
-    && go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
+    && go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest \
+    && go install -v github.com/devanshbatham/rayder@v0.0.4
 
 # Release
 FROM alpine:3.18.6
