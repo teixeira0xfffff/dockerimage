@@ -17,6 +17,7 @@ docker pull ghcr.io/neriberto/bloodhound:latest
 * `anew` - [github.com/tomnomnom/anew](https://github.com/tomnomnom/anew)
 * `apkd` - [https://github.com/kiber-io/apkd](https://github.com/kiber-io/apkd)
 * `mc` - [Minio](https://min.io/) command line
+* `rayder` - [Rayder](https://github.com/devanshbatham/rayder) is a lightweight tool for orchestrating and organizing your command-line workflows
 
 ## Usage Examples
 
