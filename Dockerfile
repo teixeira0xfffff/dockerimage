@@ -14,8 +14,6 @@ FROM alpine:3.18.6
 
 COPY --from=build-env /go/bin /root/go/bin
 
-USER root
-
 ADD requirements.txt requirements.txt
 
 RUN echo "export PATH=$HOME/bin:$HOME/go/bin:$HOME/.pdtm/go/bin:$PATH" >> /etc/profile \
