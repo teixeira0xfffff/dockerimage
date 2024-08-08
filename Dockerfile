@@ -1,32 +1,35 @@
-FROM golang:1.21-alpine AS build-env
+FROM python:3.12-slim-bookworm
 
-RUN apk add build-base
+# Instala dependências do sistema e Python
+USER root
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends iputils-ping git curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Remove the go install commands as they are not valid Dockerfile instructions
-RUN apk add --no-cache git \
-    && go install -v github.com/tomnomnom/anew@latest \
-    && go install -v github.com/HuntDownProject/hednsextractor/cmd/hednsextractor@latest \
-    && go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest \
-    && go install -v github.com/devanshbatham/rayder@v0.0.4
+# Atualiza o pip e instala as dependecias para o airflow
+ADD requirements.txt .
+RUN pip install --upgrade pip \
+    && pip install -r requirements.txt
 
-# Release
-FROM alpine:3.18.6
+# Instala golang
+WORKDIR /usr/local
+ENV GO_VERSION=1.22.5
+RUN curl -OL https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz \
+    && tar -C /usr/local -xvf go${GO_VERSION}.linux-amd64.tar.gz
 
-COPY --from=build-env /go/bin /root/go/bin
+ENV GOPATH=/go
+ENV PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
-ADD requirements.txt requirements.txt
+# Copia o arquivo requirements.txt para o contêiner
+COPY requirements.txt .
 
-RUN echo "export PATH=$HOME/bin:$HOME/go/bin:$HOME/.pdtm/go/bin:$PATH" >> /etc/profile \
-    && apk -U upgrade --no-cache \
-    && apk add --no-cache git curl bind-tools chromium ca-certificates python3 py3-pip vim nano \
-    && update-ca-certificates \
-    && python -m ensurepip \
-    && pip install -r requirements.txt \
-    && curl -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc \
-    && chmod +x /usr/local/bin/mc \
-    && source /etc/profile && pdtm -install-all \
-    && rm -rf /var/cache/apk/*
+#USER hunter
+RUN go install -v github.com/HuntDownProject/hednsextractor/cmd/hednsextractor@latest \
+    && go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest \
+    && go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest \
+    && go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest \
+    && go install -v github.com/tomnomnom/anew@latest
 
-# Add the following line to the Dockerfile to set the WORKDIR
 WORKDIR /root
-ENV ENV="/etc/profile"
