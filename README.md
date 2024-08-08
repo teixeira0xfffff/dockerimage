@@ -27,8 +27,9 @@ docker pull ghcr.io/neriberto/bloodhound:latest
 $ docker run -it ghcr.io/neriberto/bloodhound:latest
 ```
 
-2. Run and mapping local directories
+2. Updating nuclei templates and keep it locally
 
 ```bash
-$ docker run -it -v ./scripts:/app/scripts  ghcr.io/neriberto/bloodhound:latest
+$ docker volume create nuclei
+$ docker run -it -v nuclei:/root/nuclei-templates ghcr.io/neriberto/bloodhound:latest
 ```
