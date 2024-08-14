@@ -1,9 +1,6 @@
 FROM golang:1.21-alpine AS build-env
 
-RUN apk add build-base
-
-# Remove the go install commands as they are not valid Dockerfile instructions
-RUN apk add --no-cache git \
+RUN apk add --no-cache build-base git \
     && go install -v github.com/HuntDownProject/hednsextractor/cmd/hednsextractor@latest \
     && go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest \
     && go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest \
@@ -17,15 +14,16 @@ FROM alpine:3.18.6
 
 COPY --from=build-env /go/bin /usr/local/go/bin
 
-ADD requirements.txt requirements.txt
+COPY requirements.txt requirements.txt
 
 RUN echo "export PATH=/usr/local/go/bin:$HOME/bin:$HOME/go/bin:$PATH" >> /etc/profile \
     && apk -U upgrade --no-cache \
-    && apk add --no-cache git curl bind-tools chromium ca-certificates python3 py3-pip vim nano \
+    && apk add --no-cache bind-tools curl chromium ca-certificates git nano python3 py3-pip vim  \
     && update-ca-certificates \
     && python -m ensurepip \
-    && pip install -r requirements.txt \
-    && curl -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc \
+    && pip install -r requirements.txt
+
+RUN curl -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc \
     && chmod +x /usr/local/bin/mc \
     && rm -rf /var/cache/apk/*
 
