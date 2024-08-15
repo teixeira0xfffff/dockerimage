@@ -4,6 +4,7 @@ FROM golang:1.21-alpine AS build-env
 RUN apk add --no-cache build-base git \
     && go install -v github.com/tomnomnom/anew@latest \
     && go install -v github.com/HuntDownProject/hednsextractor/cmd/hednsextractor@latest \
+    && go install -v github.com/HuntDownProject/logme/cmd/logme@develop \
     && go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest \
     && go install -v github.com/devanshbatham/rayder@v0.0.4
 
