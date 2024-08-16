@@ -1,10 +1,10 @@
-FROM golang:1.21-alpine AS build-env
+FROM golang:1.22-alpine AS build-env
 
 # Remove the go install commands as they are not valid Dockerfile instructions
 RUN apk add --no-cache build-base git \
     && go install -v github.com/tomnomnom/anew@latest \
     && go install -v github.com/HuntDownProject/hednsextractor/cmd/hednsextractor@latest \
-    && go install -v github.com/HuntDownProject/logme/cmd/logme@develop \
+    && go install -v github.com/HuntDownProject/logme/cmd/logme@latest \
     && go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest \
     && go install -v github.com/devanshbatham/rayder@v0.0.4
 
@@ -12,7 +12,6 @@ RUN apk add --no-cache build-base git \
 FROM alpine:3.18.6
 
 COPY --from=build-env /go/bin /root/go/bin
-
 COPY requirements.txt requirements.txt
 
 RUN echo "export PATH=$HOME/bin:$HOME/go/bin:$HOME/.pdtm/go/bin:$PATH" >> /etc/profile \
